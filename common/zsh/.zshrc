@@ -88,9 +88,5 @@ setopt hist_find_no_dups
 alias ls="eza -al --icons=auto"
 alias lg="lazygit"
 
-# --- acc ---
-source <(capri --zsh-completions 2>/dev/null)
-source <(isc --zsh-completions 2>/dev/null)
-source <(acc --zsh-completions 2>/dev/null)
 
 
