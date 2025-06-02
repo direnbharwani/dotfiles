@@ -1,1 +1,5 @@
+# MacOS Specific
 **/.DS_Store
+
+# Ignore TPM & plugins: only installed on system
+**/.config/tmux/plugins

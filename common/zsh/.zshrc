@@ -1,3 +1,5 @@
+export TERM="xterm-256color"
+
 # Shell Integrations
 eval "$(/opt/homebrew/bin/brew shellenv)"
 eval "$(fzf --zsh)"

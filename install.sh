@@ -64,6 +64,34 @@ install_packages() {
   done
 }
 
+post_install() {
+  echo "Running post-install hooks..."
+
+  if [[ -n "$TARGET_PACKAGE" || "$TARGET_PACKAGE" == "tmux" ]]; then
+    local tpm_dir="$HOME/.config/tmux/plugins/tpm"
+
+    if [[ ! -d "$tpm_dir" ]]; then
+      echo "Installing TPM (Tmux Plugin Manager)..."
+      git clone https://github.com/tmux-plugins/tpm "$tpm_dir"
+    else
+      echo "TPM already installed at $tpm_dir"
+    fi
+
+    if command -v tmux >/dev/null 2>&1;then
+      echo "Installing tmux plugins..."
+      tmux start-server
+      tmux new-session -d
+      "$tpm_dir/bin/install_plugins"
+      tmux kill-server
+    else
+      echo "Error: tmux not found! Skipping plugin install"
+    fi
+  fi
+
+
+  echo "Post-install complete!"
+}
+
 # -----------------------------------------------------------------------------
 # Main Flow
 # -----------------------------------------------------------------------------
@@ -115,5 +143,10 @@ if [[ -n $TARGET_PACKAGE ]]; then
   echo "Target: $TARGET_PACKAGE"
   echo ""
 fi
+
 install_packages "common"
 install_packages "$PLATFORM"
+
+if [[ "$MODE" == "install" ]]; then
+  post_install 
+fi
