@@ -1,7 +1,53 @@
 #!/bin/bash
 
 # -----------------------------------------------------------------------------
+# Logging
+# -----------------------------------------------------------------------------
+
+logf() {
+  local color="$1"; shift
+  local label="$1"; shift
+  local fmt="$1"; shift
+
+  if [[ -n "$label" ]]; then
+      printf "\033[%sm%s %s\033[0m\n" "$color" "$label" "$(printf "$fmt" "$@")"
+  else
+      printf "\033[%sm%s\033[0m\n" "$color" "$(printf "$fmt" "$@")"
+  fi
+}
+
+info()    { logf "1"      ""          "$@"; }  # bold default
+success() { logf "1;32"   "[SUCCESS]" "$@"; }  # bold green
+warn()    { logf "1;33"   "[WARN]"    "$@"; }  # bold yellow
+error()   { logf "1;31"   "[ERROR]"   "$@"; }  # bold red
+note()    { logf "1;36"   ""          "$@"; }  # bold cyan
+
+# -----------------------------------------------------------------------------
 # Helper Functions
+# -----------------------------------------------------------------------------
+
+command_exists() {
+  command -v "$1" >/dev/null 2>&1
+}
+
+detect_package_manager() {
+  local package_managers=(
+    "brew"
+    "pacman"
+    "apt"
+  )
+
+  for package_manager in "${package_managers[@]}"; do
+    if command_exists "$package_manager"; then
+      echo "$package_manager"
+      return
+    fi
+  done
+}
+
+
+# -----------------------------------------------------------------------------
+# Package Management Functions
 # -----------------------------------------------------------------------------
 
 preview() {
@@ -9,7 +55,7 @@ preview() {
   local pkg_name="$2"
   local pkg_path="$base_dir/$pkg_name"
 
-  echo "Preview: stow $pkg_name from $base_dir"
+  info "Preview: stow $pkg_name from $base_dir"
 
   # Find all top-level symlink targets inside the stow package
   find "$pkg_path" -mindepth 1 -maxdepth 1 -print0 | while IFS= read -r -d '' item; do
@@ -27,15 +73,17 @@ preview() {
         local sub_target_path="$HOME/$sub_rel_path"
         sub_target_path="${sub_target_path/#$HOME/~}"
 
-        echo "     $sub_target_path -> $(realpath "$subitem")"
+        note "    $sub_target_path -> $(realpath "$subitem")"
+        echo ""
       done
     else
-      echo "     $target_path -> $(realpath "$item")"
+      note "    $target_path -> $(realpath "$item")"
+      echo ""
     fi
   done
 }
 
-install_packages() {
+install_package_configs() {
   local dir="$1"
 
   local pkg
@@ -47,14 +95,14 @@ install_packages() {
     if [[ -n "$TARGET_PACKAGE" && "$pkg_name" != "$TARGET_PACKAGE" ]]; then
       continue
     fi
-    
+
     case "$MODE" in
       install)
-        echo "🔗 Stowing $pkg_name from $dir..."
+        echo "Stowing $pkg_name from $dir..."
         (cd "$dir" && stow -v -R -t "$HOME" "$pkg_name")
         ;;
       uninstall)
-        echo "🔗 Unstowing $pkg_name from $dir..."
+        echo "Unstowing $pkg_name from $dir..."
         (cd "$dir" stow -v -D -t "$HOME" "$pkg_name")
         ;;
       preview)
@@ -77,7 +125,7 @@ post_install() {
       echo "TPM already installed at $tpm_dir"
     fi
 
-    if command -v tmux >/dev/null 2>&1;then
+    if command_exists tmux; then
       echo "Installing tmux plugins..."
       tmux start-server
       tmux new-session -d
@@ -101,25 +149,28 @@ set -e
 # Forces script to run from root
 cd "$(dirname $0)" 
 
+# Vars
+OS="$(uname -s)"
+MODE="install"
+PACKAGE_MANAGER=""
+
 # Check if stow is installed
-if ! command -v stow >/dev/null 2>&1; then
-  echo "❌ Error: 'stow' is not installed."
-  echo "👉 Please install it using your package manager:"
-  echo "  - macOS: brew install stow"
-  echo "  - Arch Linux: sudo pacman -S stow"
+if ! command_exists stow; then
+  error "'stow' is not installed."
+  note  "Please install it using your package manager:"
+  note  "  - macOS: brew install stow"
+  note  "  - Arch Linux: sudo pacman -S stow"
   exit 1
 fi
 
 # Detect OS
-OS="$(uname -s)"
 case "$OS" in
   Darwin) PLATFORM="macOS" ;;
   Linux)  PLATFORM="linux" ;;
-  *)      echo "❌ Unsupported OS: $OS"; exit 1 ;;
+  *)      error "Unsupported OS: $OS"; exit 1 ;;
 esac
 
 # Modes
-MODE="install"
 for arg in "$@"; do
   case "$arg" in
     -p | --preview) 
@@ -132,21 +183,35 @@ for arg in "$@"; do
       MODE="uninstall"
       ;;
     *)
-      echo "❌ Unknown option: $1"
+      echo "Unknown option: $1"
       exit 1
   esac
 done
 
-echo "Platform: $PLATFORM | Mode: $MODE"
-echo "---------------------------------"
+
+package_manager=$(detect_package_manager)
+if [[ -z "$package_manager" ]]; then
+  error "No supported package manager found. Refer to help page or README."
+  exit 1
+fi
+
+echo "--------------------------------"
+echo "Install Script Info"
+echo "--------------------------------"
+info "%-16s %-5s" "Platform:" "$PLATFORM"
+info "%-16s %-5s" "Package Manager:" "$package_manager"
+info "%-16s %-5s" "Mode:" "$MODE"
+echo "--------------------------------"
+echo ""
+
 if [[ -n $TARGET_PACKAGE ]]; then
   echo "Target: $TARGET_PACKAGE"
   echo ""
 fi
 
-install_packages "common"
-install_packages "$PLATFORM"
+install_package_configs "common"
+install_package_configs "$PLATFORM"
 
-if [[ "$MODE" == "install" ]]; then
-  post_install 
-fi
+# if [[ "$MODE" == "install" ]]; then
+#   post_install 
+# fi
