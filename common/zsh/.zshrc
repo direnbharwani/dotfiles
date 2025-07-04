@@ -24,7 +24,6 @@ if [[ -f $(pyenv root)/versions/$(pyenv version-name)/bin/virtualenvwrapper.sh ]
   source $(pyenv root)/versions/$(pyenv version-name)/bin/virtualenvwrapper.sh
 fi
 
-
 if [ "$TERM_PROGRAM" != "Apple_Terminal" ]; then
   eval "$(oh-my-posh init zsh --config $HOME/.config/oh-my-posh/kanagawa_zen.toml)"
 fi
@@ -90,5 +89,9 @@ setopt hist_find_no_dups
 alias ls="eza -al --icons=auto"
 alias lg="lazygit"
 
+# -- direnv --
+zinit as"program" make'!' atclone'./direnv hook zsh > zhook.zsh' \
+    atpull'%atclone' pick"direnv" src"zhook.zsh" for \
+        direnv/direnv
 
-
+fpath+=~/.zfunc; autoload -Uz compinit; compinit
