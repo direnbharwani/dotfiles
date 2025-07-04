@@ -133,7 +133,9 @@ return {
 		{
 			"<leader>sg",
 			function()
-				Snacks.picker.grep()
+				Snacks.picker.grep({
+					args = { "-F" },
+				})
 			end,
 			desc = "Grep",
 		},
@@ -204,7 +206,7 @@ return {
 			desc = "LSP Workspace Symbols",
 		},
 
-		-- Other
+		-- Git
 		{
 			"<leader>gB",
 			function()
@@ -212,6 +214,20 @@ return {
 			end,
 			desc = "Git Browse",
 			mode = { "n", "v" },
+		},
+		{
+			"<leader>gl",
+			function()
+				Snacks.picker.git_log()
+			end,
+			desc = "Git Log",
+		},
+		{
+			"<leader>gf",
+			function()
+				Snacks.picker.git_log_file()
+			end,
+			desc = "Git Log File",
 		},
 	},
 
