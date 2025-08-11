@@ -19,7 +19,7 @@ exec-on-workspace-change = ['/bin/bash', '-c',
 ]
 
 # Start AeroSpace at login
-start-at-login = true 
+start-at-login = true
 
 # Normalizations. See: https://nikitabobko.github.io/AeroSpace/guide#normalization
 enable-normalization-flatten-containers = true
@@ -69,7 +69,7 @@ automatically-unhide-macos-hidden-apps = false
     inner.vertical =   5
     outer.left =       5
     outer.bottom =     5
-    outer.top =        [{monitor.main = 5}, 38]
+    outer.top =        5
     outer.right =      5
 
 # 'main' binding mode declaration
@@ -128,10 +128,12 @@ automatically-unhide-macos-hidden-apps = false
     alt-1 = 'workspace 1'
     alt-2 = 'workspace 2'
     alt-3 = 'workspace 3'
+    alt-a = 'workspace A' # ChatGPT
     alt-b = 'workspace B' # Safari
     alt-c = 'workspace C' # VSCode
     alt-e = 'workspace E' # Email
     alt-f = 'workspace F' # Finder
+    alt-i = 'workspace I' # IntelliJ
     alt-m = 'workspace M' # Apple Music
     alt-n = 'workspace N' # Notes: Things, Calendar
     alt-r = 'workspace R' # Radar
@@ -143,10 +145,12 @@ automatically-unhide-macos-hidden-apps = false
     alt-shift-1 = 'move-node-to-workspace 1'
     alt-shift-2 = 'move-node-to-workspace 2'
     alt-shift-3 = 'move-node-to-workspace 3'
+    alt-shift-a = 'move-node-to-workspace A'
     alt-shift-b = 'move-node-to-workspace B'
     alt-shift-c = 'move-node-to-workspace C'
     alt-shift-e = 'move-node-to-workspace E'
     alt-shift-f = 'move-node-to-workspace F'
+    alt-shift-i = 'move-node-to-workspace I'
     alt-shift-m = 'move-node-to-workspace M'
     alt-shift-n = 'move-node-to-workspace N'
     alt-shift-r = 'move-node-to-workspace R'
@@ -186,6 +190,10 @@ automatically-unhide-macos-hidden-apps = false
 
 # Automatically move windows to assigned workspaces
 [[on-window-detected]]
+if.app-id = 'com.openai.chat'
+run = "move-node-to-workspace A"
+
+[[on-window-detected]]
 if.app-id = 'com.apple.Safari'
 run = "move-node-to-workspace B"
 
@@ -198,8 +206,12 @@ if.app-id = 'com.apple.mail'
 run = "move-node-to-workspace E"
 
 [[on-window-detected]]
-if.app-id = 'com.apple.finder'  
+if.app-id = 'com.apple.finder'
 run = "move-node-to-workspace F"
+
+[[on-window-detected]]
+if.app-id = 'com.jetbrains.intellij.ce'
+run = "move-node-to-workspace I"
 
 [[on-window-detected]]
 if.app-id = 'com.apple.Music'
