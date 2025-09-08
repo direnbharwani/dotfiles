@@ -3,3 +3,6 @@
 
 # Ignore TPM & plugins: only installed on system
 **/.config/tmux/plugins
+
+# Private/local configurations
+**/local.zsh
