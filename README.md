@@ -1,6 +1,5 @@
-# Dotfiles
-
-Personal configuration files and settings.
+<h1 align="center">Diren's Dotfiles</h1>
+<p align="center">Personal configuration files and settings.</p>
 
 ## Installation
 
