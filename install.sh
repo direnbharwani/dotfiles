@@ -6,7 +6,7 @@
 set -e
 
 # Available dotfile packages
-AVAILABLE_PACKAGES=("zsh")
+AVAILABLE_PACKAGES=("zsh" "vim")
 
 # macOS-specific packages
 # added to available packages if on macOS
