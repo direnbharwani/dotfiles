@@ -10,7 +10,7 @@ AVAILABLE_PACKAGES=("zsh" "vim" "nvim")
 
 # macOS-specific packages
 # added to available packages if on macOS
-MACOS_PACKAGES=("aerospace")
+MACOS_PACKAGES=("aerospace" "borders")
 if [[ "$OSTYPE" == "darwin"* ]]; then
     AVAILABLE_PACKAGES+=("${MACOS_PACKAGES[@]}")
 fi
