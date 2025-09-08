@@ -1,8 +1,9 @@
 # MacOS Specific
 **/.DS_Store
 
-# Ignore TPM & plugins: only installed on system
-**/.config/tmux/plugins
+# Ignore installed plugins but allow tpm submodule
+**/.config/tmux/plugins/*
+!**/.config/tmux/plugins/tpm
 
 # Private/local configurations
 **/local.zsh
