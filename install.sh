@@ -6,7 +6,7 @@
 set -e
 
 # Available dotfile packages
-AVAILABLE_PACKAGES=("zsh" "vim" "nvim" "tmux")
+AVAILABLE_PACKAGES=("zsh" "vim" "nvim" "tmux" "oh-my-posh")
 
 # macOS-specific packages
 # added to available packages if on macOS
