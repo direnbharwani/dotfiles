@@ -172,6 +172,8 @@ main() {
         else
             log_warning "Some packages failed to install: ${failed_packages[*]}"
         fi
+
+        log_warning "This script only symlink's dotfiles and does not check if the packages have been installed."
     fi
 }
 
