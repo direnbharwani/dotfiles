@@ -29,6 +29,9 @@ chmod +x install.sh && ./install.sh
 > To get tmux plugins to install:
 >
 > 1. Start a tmux instance
+> ```bash
+> tmux new
+> ```
 > 2. Press `prefix + I` (default prefix is `<Ctrl + Space>`)
 
 ## Future Plans
