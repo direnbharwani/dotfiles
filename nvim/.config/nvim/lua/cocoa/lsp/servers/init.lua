@@ -9,6 +9,7 @@ local server_files = {
 	"bashls",
 	"marksman",
 	"lua_ls",
+	"ruff",
 	"rust_analyzer",
 }
 
