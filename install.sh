@@ -6,14 +6,23 @@
 set -e
 
 # Available dotfile packages
-AVAILABLE_PACKAGES=("zsh" "vim" "nvim" "tmux" "oh-my-posh")
+COMMON_PACKAGES=("zsh" "vim" "nvim" "tmux" "oh-my-posh")
 
 # macOS-specific packages
 # added to available packages if on macOS
 MACOS_PACKAGES=("aerospace" "borders")
-if [[ "$OSTYPE" == "darwin"* ]]; then
-    AVAILABLE_PACKAGES+=("${MACOS_PACKAGES[@]}")
-fi
+
+# ------------------------------------------------------------------------------
+# Shared Functions
+# ------------------------------------------------------------------------------
+
+get_all_packages() {
+    local all_packages=("${COMMON_PACKAGES[@]}")
+    if [[ "$OSTYPE" == "darwin"* ]]; then
+        all_packages+=("${MACOS_PACKAGES[@]}")
+    fi
+    echo "${all_packages[@]}"
+}
 
 # ------------------------------------------------------------------------------
 # Logging
@@ -45,17 +54,12 @@ show_help() {
     echo "  $0 -h, --help         Show this help"
     echo ""
     echo "Available packages:"
-    for package in "${AVAILABLE_PACKAGES[@]}"; do
-        echo "  - $package"
+
+    local all_packages=($(get_all_packages))
+    for package in "${all_packages[@]}"; do
+        echo "- $package"
     done
     echo ""
-    if [[ ${#MACOS_PACKAGES[@]} -gt 0 ]]; then
-        echo "macOS-specific packages:"
-        for package in "${MACOS_PACKAGES[@]}"; do
-            echo "  - $package"
-        done
-        echo ""
-    fi
 }
 
 check_stow() {
@@ -71,42 +75,34 @@ check_stow() {
     fi
 }
 
-install_package() {
-    local package="$1"
+# Generic package operation function
+process_package() {
+    local operation="$1"
+    local package="$2"
+    local stow_flag="$3"
     
     if [[ ! -d "$package" ]]; then
         log_warning "Package '$package' not found, skipping..."
         return 1
     fi
     
-    log_info "Installing $package..."
+    log_info "${operation} $package..."
     
-    if stow -t ~ "$package"; then
-        log_success "Successfully installed $package"
+    if stow -t ~ $stow_flag "$package"; then
+        log_success "Successfully ${operation}ed $package"
         return 0
     else
-        log_error "Failed to install $package"
+        log_error "Failed to $operation $package"
         return 1
     fi
 }
 
+install_package() {
+    process_package "install" "$1" ""
+}
+
 uninstall_package() {
-    local package="$1"
-    
-    if [[ ! -d "$package" ]]; then
-        log_warning "Package '$package' not found, skipping..."
-        return 1
-    fi
-    
-    log_info "Uninstalling $package..."
-    
-    if stow -t ~ -D "$package"; then
-        log_success "Successfully uninstalled $package"
-        return 0
-    else
-        log_error "Failed to uninstall $package"
-        return 1
-    fi
+    process_package "uninstall" "$1" "-D"
 }
 
 # ------------------------------------------------------------------------------
@@ -117,64 +113,71 @@ main() {
     cd "$(dirname "$0")"
     
     check_stow
+
+    local all_packages=($(get_all_packages))
     
     # Parse arguments
+    while [[ $# -gt 0 ]]; do
+        case $1 in
+            -h|--help)
+                show_help
+                exit 0
+                ;;
+            -u)
+                shift
+                if [[ $# -eq 0 ]]; then
+                    log_error "No packages specified for uninstallation"
+                    exit 1
+                fi
+                
+                for package in "$@"; do
+                    uninstall_package "$package"
+                done
+                exit 0
+                ;;
+            -*)
+                log_error "Unknown option: $1"
+                show_help
+                exit 1
+                ;;
+            *)
+                break
+                ;;
+        esac
+    done
+    
+    failed_packages=()
+
     if [[ $# -eq 0 ]]; then
         # Install all packages
         log_info "Installing all available packages..."
-        failed_packages=()
         
-        for package in "${AVAILABLE_PACKAGES[@]}"; do
+        for package in "${all_packages[@]}"; do
             if ! install_package "$package"; then
                 failed_packages+=("$package")
             fi
         done
-        
-        if [[ ${#failed_packages[@]} -eq 0 ]]; then
-            log_success "All packages installed successfully!"
-        else
-            log_warning "Some packages failed to install: ${failed_packages[*]}"
-        fi
-        
-    elif [[ "$1" == "-h" || "$1" == "--help" ]]; then
-        show_help
-        
-    elif [[ "$1" == "-u" ]]; then
-        # Uninstall mode
-        shift
-        if [[ $# -eq 0 ]]; then
-            log_error "No packages specified for uninstallation"
-            exit 1
-        fi
-        
-        for package in "$@"; do
-            uninstall_package "$package"
-        done
-        
     else
-        # Install specific packages
-        failed_packages=()
-        
         for package in "$@"; do
-            if [[ " ${AVAILABLE_PACKAGES[*]} " =~ " $package " ]]; then
+            if [[ " ${all_packages[*]} " =~ " $package " ]]; then
                 if ! install_package "$package"; then
                     failed_packages+=("$package")
                 fi
             else
                 log_error "Unknown package: $package"
-                log_info "Available packages: ${AVAILABLE_PACKAGES[*]}"
+                log_info "Available packages: ${all_packages[*]}"
                 failed_packages+=("$package")
             fi
         done
-        
-        if [[ ${#failed_packages[@]} -eq 0 ]]; then
-            log_success "All specified packages installed successfully!"
-        else
-            log_warning "Some packages failed to install: ${failed_packages[*]}"
-        fi
-
-        log_warning "This script only symlink's dotfiles and does not check if the packages have been installed."
     fi
+
+    if [[ ${#failed_packages[@]} -eq 0 ]]; then
+        log_success "All packages installed successfully!"
+    else
+        log_warning "Some packages failed to install: ${failed_packages[*]}"
+    fi
+
+    log_warning "This script only symlink's dotfiles and does not check if the packages have been installed."
 }
 
 main "$@"
