@@ -10,7 +10,6 @@ local server_files = {
 	"marksman",
 	"lua_ls",
 	"ruff",
-	"rust_analyzer",
 }
 
 -- Load all server configurations
