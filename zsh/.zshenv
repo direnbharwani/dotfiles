@@ -9,6 +9,12 @@ if command -v go >/dev/null 2>&1 || [[ -d "$HOME/.local/share/go" ]]; then
   export GOPATH="$HOME/.local/share/go"
 fi
 
+# pyenv
+if [[ -d "$HOME/.pyenv" ]]; then
+  export PYENV_ROOT="$HOME/.pyenv"
+  [[ -d $PYENV_ROOT/bin ]] && export PATH="$PYENV_ROOT/bin:$PATH"
+fi
+
 # Rust
 if [[ -d "$HOME/.cargo" ]]; then
   export PATH="$PATH:$HOME/.cargo/bin"
