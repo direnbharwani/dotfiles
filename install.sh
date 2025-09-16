@@ -10,7 +10,7 @@ COMMON_PACKAGES=("zsh" "vim" "nvim" "tmux" "oh-my-posh")
 
 # macOS-specific packages
 # added to available packages if on macOS
-MACOS_PACKAGES=("aerospace" "borders")
+MACOS_PACKAGES=("aerospace")
 
 get_all_packages() {
   local all_packages=("${COMMON_PACKAGES[@]}")
