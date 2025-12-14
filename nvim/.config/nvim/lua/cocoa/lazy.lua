@@ -28,6 +28,7 @@ vim.opt.rtp:prepend(lazypath)
 require("lazy").setup({
 	{ import = "cocoa.plugins" },
 	{ import = "cocoa.plugins.git" },
+	{ import = "cocoa.plugins.lsp" },
 	{ import = "cocoa.plugins.markdown" },
 	{ import = "cocoa.plugins.themes" },
 	{ import = "cocoa.plugins.utils" },

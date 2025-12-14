@@ -33,7 +33,6 @@ return {
 			zsh = { "codespell" },
 		}
 
-		-- Custom ansible-lint for Ansible files only
 		local function is_ansible_file()
 			local filename = vim.fn.expand("%:t")
 			local filepath = vim.fn.expand("%:p")
@@ -53,18 +52,26 @@ return {
 				)
 		end
 
+		-- Configure ansible-lint to use Mason-installed version
+		lint.linters.ansible_lint = {
+			cmd = vim.fn.stdpath("data") .. "/mason/bin/ansible-lint",
+			args = { "-p", "--nocolor" },
+			ignore_exitcode = true,
+			parser = require("lint.parser").from_errorformat("%f:%l:%c: %m,%f:%l: %m", {
+				source = "ansible-lint",
+				severity = vim.diagnostic.severity.INFO,
+			}),
+		}
+
 		local lint_augroup = vim.api.nvim_create_augroup("lint", { clear = true })
 		vim.api.nvim_create_autocmd({ "BufEnter", "BufWritePost", "InsertLeave" }, {
 			group = lint_augroup,
 			callback = function()
-				-- Run ansible-lint on Ansible files
 				if is_ansible_file() then
-					require("lint").try_lint("ansible-lint")
+					require("lint").try_lint("ansible_lint")
 				end
-				-- Run regular linters
 				lint.try_lint()
 			end,
 		})
 	end,
 }
-
