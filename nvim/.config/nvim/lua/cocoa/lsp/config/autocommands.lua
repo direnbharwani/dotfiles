@@ -78,6 +78,14 @@ function M.setup()
 			require("cocoa.lsp.config.jdtls").setup()
 		end,
 	})
+
+	-- Detect Jinja template files by extension
+	vim.api.nvim_create_autocmd({ "BufNewFile", "BufRead" }, {
+		pattern = { "*.jinja", "*.jinja2", "*.j2", "*.html.jinja" },
+		callback = function()
+			vim.bo.filetype = "jinja"
+		end,
+	})
 end
 
 return M
