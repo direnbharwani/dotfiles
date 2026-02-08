@@ -132,13 +132,12 @@ automatically-unhide-macos-hidden-apps = false
     alt-b = 'workspace B' # Safari
     alt-e = 'workspace E' # Email
     alt-f = 'workspace F' # Finder
-    alt-i = 'workspace I' # IntelliJ
-    alt-m = 'workspace M' # Apple Music, Spotify
+    alt-m = 'workspace M' # Spotify
     alt-n = 'workspace N' # Notes: Things, Calendar
     alt-p = 'workspace P' # Planning: Miro
     alt-r = 'workspace R' # Radar
     alt-s = 'workspace S' # Slack 
-    alt-t = 'workspace T' # Terminal, Typora
+    alt-t = 'workspace T' # Terminal
     alt-w = 'workspace W' # Webex
 
     # See: https://nikitabobko.github.io/AeroSpace/commands#move-node-to-workspace
@@ -149,7 +148,6 @@ automatically-unhide-macos-hidden-apps = false
     alt-shift-b = 'move-node-to-workspace B'
     alt-shift-e = 'move-node-to-workspace E'
     alt-shift-f = 'move-node-to-workspace F'
-    alt-shift-i = 'move-node-to-workspace I'
     alt-shift-m = 'move-node-to-workspace M'
     alt-shift-n = 'move-node-to-workspace N'
     alt-shift-r = 'move-node-to-workspace R'
@@ -208,14 +206,6 @@ run = "move-node-to-workspace E"
 [[on-window-detected]]
 if.app-id = 'com.apple.finder'
 run = "move-node-to-workspace F"
-
-[[on-window-detected]]
-if.app-id = 'com.jetbrains.intellij.ce'
-run = "move-node-to-workspace I"
-
-[[on-window-detected]]
-if.app-id = 'com.apple.Music'
-run = "move-node-to-workspace M"
 
 [[on-window-detected]]
 if.app-id = 'com.spotify.client'
