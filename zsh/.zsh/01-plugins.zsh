@@ -13,6 +13,9 @@ fi
 ## load zinit
 source "${ZINIT_HOME}/zinit.zsh"
 
+# Load completions
+autoload -U compinit && compinit
+
 ## zsh plugins
 zinit light zsh-users/zsh-syntax-highlighting
 zinit light zsh-users/zsh-completions
