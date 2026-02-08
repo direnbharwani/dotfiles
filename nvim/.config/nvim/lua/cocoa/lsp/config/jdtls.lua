@@ -61,7 +61,8 @@ function M.setup()
 					includeDecompiledSources = true,
 				},
 				format = {
-					enabled = true,
+					-- Disable jdtls formatting - we use google-java-format via conform.nvim
+					enabled = false,
 				},
 			},
 		},

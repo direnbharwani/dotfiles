@@ -80,12 +80,12 @@ function M.setup()
 	})
 
 	-- Detect Jinja template files by extension
-	vim.api.nvim_create_autocmd({ "BufNewFile", "BufRead" }, {
-		pattern = { "*.jinja", "*.jinja2", "*.j2", "*.html.jinja" },
-		callback = function()
-			vim.bo.filetype = "jinja"
-		end,
-	})
+	-- vim.api.nvim_create_autocmd({ "BufNewFile", "BufRead" }, {
+	-- 	pattern = { "*.jinja", "*.jinja2", "*.j2", "*.html.jinja" },
+	-- 	callback = function()
+	-- 		vim.bo.filetype = "jinja"
+	-- 	end,
+	-- })
 end
 
 return M
