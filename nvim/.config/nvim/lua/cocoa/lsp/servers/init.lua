@@ -7,7 +7,8 @@ local M = {}
 local server_files = {
 	"basedpyright",
 	"bashls",
-	"jinja_lsp",
+	"docker_language_server",
+	-- "jinja_lsp",
 	"marksman",
 	"lua_ls",
 	"ruff",

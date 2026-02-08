@@ -4,10 +4,10 @@
 local M = {}
 
 M.tools = {
-	"codespell", -- Used for spell checking
-	"shfmt", -- Used to format bash scripts
-	"stylua", -- Used to format Lua code
-	"prettierd", -- Used to format javascript and typescript code
+	"codespell", -- Spell Checker
+	"prettierd", -- JavaScript & TypeScript Formatting
+	"shfmt", -- Bash Formatting
+	"stylua", -- Lua Formatting
 }
 
 return M
