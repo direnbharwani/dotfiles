@@ -7,3 +7,6 @@
 
 # Private/local configurations
 **/local.zsh
+
+# Local History Files
+**/.netrwhist
