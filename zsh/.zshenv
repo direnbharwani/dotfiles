@@ -1,5 +1,21 @@
 # Environment variables - loaded for ALL shells
 
+# Homebrew setup (macOS only)
+if [[ "$OSTYPE" == "darwin"* ]]; then
+  if command -v brew >/dev/null 2>&1; then
+    eval "$(brew shellenv)"
+  elif [[ -x "/opt/homebrew/bin/brew" ]]; then
+    eval "$(/opt/homebrew/bin/brew shellenv)"
+  fi
+
+  # Ensure Homebrew bin is first (override path_helper behavior)
+  if [[ -d "/opt/homebrew/bin" ]]; then
+    PATH="${PATH//\/opt\/homebrew\/bin:/}"  # Remove from middle
+    PATH="${PATH//\/opt\/homebrew\/bin/}"   # Remove from end
+    export PATH="/opt/homebrew/bin:$PATH"
+  fi
+fi
+
 if [[ -d "$HOME/.local/bin" ]]; then
   export PATH="$PATH:$HOME/.local/bin"
 fi
