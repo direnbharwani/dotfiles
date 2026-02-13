@@ -6,8 +6,11 @@
 syntax on
 
 " Colorscheme
-" colorscheme industry
-colorscheme wildcharm
+call plug#begin(expand('~/.vim/plugged'))
+Plug 'arcticicestudio/nord-vim'
+call plug#end()
+
+colorscheme nord
 set background=dark
 " hi Normal ctermbg=NONE guibg=NONE
 " hi NonText ctermbg=NONE guibg=NONE guifg=NONE ctermfg=NONE
