@@ -10,3 +10,6 @@
 
 # Local History Files
 **/.netrwhist
+
+# Vim specific
+**/.vim/after/*
