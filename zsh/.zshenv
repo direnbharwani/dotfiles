@@ -29,7 +29,6 @@ fi
 if [[ -d "$HOME/.pyenv" ]]; then
   export PYENV_ROOT="$HOME/.pyenv"
   [[ -d $PYENV_ROOT/bin ]] && export PATH="$PYENV_ROOT/bin:$PATH"
-  eval "$(pyenv init - zsh)"
 fi
 
 # Rust
@@ -39,3 +38,6 @@ fi
 
 # User binaries
 [[ -d "$HOME/bin" && ":$PATH:" != *":$HOME/bin:"* ]] && export PATH="$HOME/bin:$PATH"
+
+# Default editor
+export EDITOR=nvim

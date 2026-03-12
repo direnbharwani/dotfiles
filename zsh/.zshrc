@@ -2,3 +2,4 @@
 for file in $HOME/.zsh/*.zsh; do
   [ -r "$file" ] && source "$file"
 done
+
