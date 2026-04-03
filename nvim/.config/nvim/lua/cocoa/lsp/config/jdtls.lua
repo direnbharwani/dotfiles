@@ -14,7 +14,7 @@ function M.setup()
 	local config = {
 		-- Command to start jdtls with Lombok support
 		cmd = {
-			"java", -- Apple JDK 21 from PATH
+			"/Library/Java/JavaVirtualMachines/applejdk-21.0.10.7.1.jdk/Contents/Home/bin/java",
 
 			-- Lombok support for Spring Boot projects
 			"-javaagent:" .. lombok_jar,
